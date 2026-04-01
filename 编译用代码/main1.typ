@@ -58,7 +58,7 @@
 
 #show heading.where(level:1) : it => [
   #set text(size:10pt,weight:"regular"); 
-  #box(it, fill: silver, radius: 1.2pt, inset: (x:2pt, y:1pt))
+  #box(it, fill: silver, radius: 1.2pt, inset: (x:2pt, y:2pt))
 ]
 #show regex("🌱") :it => {
   text(font:"Noto Color Emoji", it, top-edge:1pt, baseline: -0.06em)

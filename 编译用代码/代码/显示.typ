@@ -43,7 +43,8 @@
       
       // 一级标题设置。
       show heading.where(level:1) : it => {
-          pad(top:0em, bottom:1em)[#align(center)[#text(size:16pt, weight: "light", it.body)]]
+          align(center, text(size:14pt, font:"Noto Sans CJK SC", weight:"regular" ,it.body))
+          v(1em)
       }
 
       // 关闭 "" 在中文环境中自动打印为“”的功能。
