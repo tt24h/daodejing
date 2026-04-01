@@ -23,15 +23,15 @@
 ├── 编译用代码/                   # 生成 PDF 的 Typst 源码。
 ├── 字典、字典工具介绍.md
 └── [Releases]
-    ├── File-01.pdf ⟾ 老子道德经：四种原文表.pdf
-    └── File-02.pdf ⟾ 代码说明.pdf
+    ├── daodejing.pdf             # 老子道德经：四种原文表.pdf
+    └── code_logic.pdf            # 代码说明.pdf
 ```
 
 ### 下载：
 
 在 **Releases** 中下载已编译好的 PDF 文件：
-* `File-01.pdf` ： `老子道德经：四种原文表.pdf`。
-* `File-02.pdf` ： `代码说明.pdf`。
+* `daodejing.pdf` => `老子道德经：四种原文表.pdf`。
+* `code_logic.pdf` => `代码说明.pdf`。
 
 
 ### 编辑、编译 pdf 文件：
