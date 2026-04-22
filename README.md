@@ -30,8 +30,7 @@
 ### 下载：
 
 在 **Releases** 中下载已编译好的 PDF 文件：
-* 老子道德经：四种原文表.pdf => `daodejing.pdf` [下载](https://github.com/tt24h/daodejing/releases/latest/download/daodejing.pdf) 。
-* 代码说明.pdf => `code_logic.pdf` [下载](https://github.com/tt24h/daodejing/releases/latest/download/code_logic.pdf ) 。
+* 老子道德经：四种原文表.pdf：[下载](https://github.com/tt24h/daodejing/releases/latest/download/daodejing.pdf)
 
 ### 编辑、编译 pdf 文件：
 
