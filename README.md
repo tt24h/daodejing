@@ -17,21 +17,19 @@
 ### 下载：
 
 老子道德经：四种原文表.pdf：[下载](https://github.com/tt24h/daodejing/releases/latest/download/daodejing.pdf)
-* 文件名：Releases → `daodejing.pdf`
+* 文件：Releases → `daodejing.pdf`
 * 在 工具/ 内，有 编辑、编译 pdf 文件的指南。
 
 ### 使用协议：
 
-1. 文档与代码：采用 CC0 1.0 协议发布。
+1. 仓库内 字体外 的文件及内容：采用 CC0 1.0 协议发布。
 2. 自制补充字体：采用 SIL Open Font License 1.1 (OFL) 协议发布，无保留名称。
 
-	* 本项目自制补充字体共实现 300+ 个字形，包括隶定字形、生僻字等，构件来源：
+	* 文件：`DaoDeJingExt-Light.ttf`
+   * 本项目自制补充字体共实现 300+ 个字形，包括隶定字形、生僻字等，构件来源：
    * 思源宋体
    * 全字库宋体
    * 花园字体
    * GlyphWiki。
 
 字体文件放在 编译用代码/ 内。
-
-
-
