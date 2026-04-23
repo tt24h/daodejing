@@ -13,47 +13,25 @@
 
 采用表格方式排版，同行显示同一版本原文，同列对齐各版本的相关文字，并标记列内的共用通行字。
 
-### 仓库目录结构
-
-```text
-仓库
-├── 实录/                         # 各本原始文字实录。
-│   ├── 实录-*.txt                # 排版代码所锚定的原始文本，便于检查改动。
-│   └── 工具-从代码还原原文.html
-├── 编译用代码/                   # 生成 PDF 的 Typst 源码。
-├── 字典、字典工具介绍.md
-└── [Releases]
-    ├── daodejing.pdf             # 老子道德经：四种原文表.pdf
-    └── code_logic.pdf            # 代码说明.pdf
-```
 
 ### 下载：
 
-在 **Releases** 中下载已编译好的 PDF 文件：
-* 老子道德经：四种原文表.pdf：[下载](https://github.com/tt24h/daodejing/releases/latest/download/daodejing.pdf)
-
-### 编辑、编译 pdf 文件：
-
-1. **注册免费账户**：https://typst.app/ 
-2. **新建项目**：在 Dashboard 页面，点击 Empty document 大按钮。
-3. **上传资源**：将本地「编译用代码/」里的所有内容，上传至 Typst 在线编辑器。
-4. **指定预览文件**：在侧边栏选中 `main.typ` 文件，右键设为预览文件。
-5. **完成**：导出 pdf。
-    * 修改代码，可以参考 `代码说明.pdf`。
-    * 只读示例：https://typst.app/project/rh30kTYz7JlHgiY2e0m3T4
+老子道德经：四种原文表.pdf：[下载](https://github.com/tt24h/daodejing/releases/latest/download/daodejing.pdf)
+* 文件名：Releases → `daodejing.pdf`
+* 在 工具/ 内，有 编辑、编译 pdf 文件的指南。
 
 ### 使用协议：
 
 1. 文档与代码：采用 CC0 1.0 协议发布。
 2. 自制补充字体：采用 SIL Open Font License 1.1 (OFL) 协议发布，无保留名称。
 
-本项目自制补充字体共实现300+个字形，包括隶定字形、生僻字等，构件来源：
+	* 本项目自制补充字体共实现 300+ 个字形，包括隶定字形、生僻字等，构件来源：
    * 思源宋体
    * 全字库宋体
    * 花园字体
    * GlyphWiki。
 
-字体文件放在「./编译用代码/」内。
+字体文件放在 编译用代码/ 内。
 
 
 
