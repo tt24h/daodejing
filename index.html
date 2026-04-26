@@ -207,14 +207,7 @@ elements.prevBtn.onclick = () => loadPage(elements.currentPage - 1);
 elements.nextBtn.onclick = () => loadPage(elements.currentPage + 1);
 
 document.getElementById('back-to-top').addEventListener('click', () => {
-    const scrollTop = () => {
-        const current = document.documentElement.scrollTop || document.body.scrollTop;
-        if (current > 0) {
-            window.requestAnimationFrame(scrollTop);
-            window.scrollTo(0, current - current / 8);
-        }
-    };
-    scrollTop();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 window.onhashchange = () => {
