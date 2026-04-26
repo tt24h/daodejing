@@ -129,6 +129,9 @@
             width: 100%;
             max-width: 1200px;
             transform-origin: 0 0;
+            left: 50%;
+            top: 20px;
+            margin-left: -50%;
         }
 
         .svg-container svg {
@@ -235,7 +238,7 @@
             const containerWidth = elements.app.clientWidth;
             const contentWidth = Math.min(containerWidth, 1200) * scale;
             translateX = (containerWidth - contentWidth) / 2;
-            translateY = 20;
+            translateY = 0;
             applyTransform();
         }
 
@@ -343,7 +346,6 @@
             }
             lastTouchEnd = now;
         }, false);
-
 
         document.getElementById('zoom-in').onclick = () => updateZoom(scale + 0.2);
         document.getElementById('zoom-out').onclick = () => updateZoom(scale - 0.2);
