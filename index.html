@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>老子道德经：四种原文表（网页版）</title>
+    <style>
+        :root {
+            --primary-bg: #fdfaf2;
+            --bar-bg: #4a4238;
+            --accent-color: #e0d8c3;
+            --btn-hover: #7c7164;
+            --text-main: #333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Serif CJK SC", serif;
+            background: var(--primary-bg);
+            margin: 0;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #top-bar {
+            background: var(--bar-bg);
+            color: var(--accent-color);
+            padding: 0 12px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+            flex-shrink: 0;
+        }
+
+        .top-nav-btn {
+            background: #665c51;
+            color: var(--accent-color);
+            border: none;
+            width: 36px;
+            height: 34px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .top-nav-btn:hover { background: var(--btn-hover); color: white; }
+        .top-nav-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+
+        select {
+            background: var(--accent-color);
+            border: none;
+            height: 34px;
+            padding: 0 8px;
+            border-radius: 4px;
+            font-size: 15px; 
+            flex: 1;
+            max-width: 16em;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .notice-banner {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 15px;
+            font-size: 13px;
+            text-align: center;
+            border-bottom: 1px solid #ffeeba;
+            flex-shrink: 0;
+        }
+
+        .notice-banner a { color: #0056b3; text-decoration: none; font-weight: bold; }
+
+        #app {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .svg-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            transition: opacity 0.3s ease;
+        }
+
+        .svg-container svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0;
+        }
+
+        .loader {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2000;
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #e0d8c3;
+            border-top: 3px solid #4a4238;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (min-width: 1200px) {
+            .svg-container {
+                border-left: 1px solid #eee;
+                border-right: 1px solid #eee;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="top-bar">
+        <button id="prev-btn" class="top-nav-btn" aria-label="上一页">‹</button>
+        <select id="chapter-select"></select>
+        <button id="next-btn" class="top-nav-btn" aria-label="下一页">›</button>
+        </header>
+
+    <div class="notice-banner">
+        ⚠️ 网页版仅供预览。完整功能 → <a href="https://tt24h.github.io" target="_blank">PDF 下载页</a>。
+    </div>
+
+    <main id="app">
+        <div id="loader" class="loader">
+            <div class="spinner"></div>
+            <div style="font-size: 14px; color: #666;">调取矢量图...</div>
+        </div>
+        <div id="content" class="svg-container"></div>
+    </main>
+
+    <script>
+        const CONFIG = {
+            prefix: "老子道德经：四种原文表-",
+            basePath: "工具/svg/",
+            totalPage: 86,
+            // 目录定义逻辑：
+            // 最后一项应为“第 1 章”，后续页面将基于此长度自动计算为“第 2 章”及以后。
+            menu: ["封面", "概述", "参考书目", "与参照出版物原文的差异", "凡例", "第 1 章"] 
+        };
+
+        const elements = {
+            select: document.getElementById('chapter-select'),
+            content: document.getElementById('content'),
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            loader: document.getElementById('loader'),
+            app: document.getElementById('app')
+        };
+
+        function init() {
+            let options = '';
+            const menuLen = CONFIG.menu.length;
+
+            for (let i = 1; i <= CONFIG.totalPage; i++) {
+                let title = "";
+                if (i <= menuLen) {
+                    title = CONFIG.menu[i - 1];
+                } else {
+                    const chapterNum = i - (menuLen - 1);
+                    title = `第 ${chapterNum} 章`;
+                }
+                options += `<option value="${i}">${title}</option>`;
+            }
+            elements.select.innerHTML = options;
+
+            const hash = parseInt(window.location.hash.replace('#', ''));
+            const startPage = (hash > 0 && hash <= CONFIG.totalPage) ? hash : 1;
+            loadPage(startPage);
+        }
+
+        async function loadPage(num) {
+            const pageNum = parseInt(num);
+            if (isNaN(pageNum)) return;
+
+            elements.loader.style.display = 'flex';
+            elements.content.style.opacity = '0.4';
+
+            const fileName = `${CONFIG.prefix}${pageNum}.svg`;
+            const url = `${CONFIG.basePath}${encodeURIComponent(fileName)}`;
+
+            try {
+                const resp = await fetch(url);
+                if (!resp.ok) throw new Error('Network error');
+                const svgData = await resp.text();
+
+                // 注入 SVG 并处理自适应
+                elements.content.innerHTML = svgData;
+                const svgElement = elements.content.querySelector('svg');
+                if (svgElement) {
+                    svgElement.setAttribute('width', '100%');
+                    svgElement.removeAttribute('height');
+                    svgElement.style.display = 'block';
+                }
+
+                // 同步下拉菜单状态
+                elements.select.value = pageNum;
+                
+                // 更新翻页按钮状态
+                elements.prevBtn.disabled = (pageNum <= 1);
+                elements.nextBtn.disabled = (pageNum >= CONFIG.totalPage);
+
+                // 更新 Hash 地址栏，支持前进后退
+                if(window.location.hash !== `#${pageNum}`) {
+                    window.history.replaceState(null, null, `#${pageNum}`);
+                }
+                
+                // 切换页面时重置滚动条到顶部
+                elements.app.scrollTop = 0;
+
+            } catch (err) {
+                console.error('加载失败:', err);
+                elements.content.innerHTML = `
+                    <div style="padding:60px; text-align:center; color:#c00;">
+                        页面载入失败，请检查网络连接。<br><br>
+                        <button onclick="location.reload()" style="padding:10px 20px; cursor:pointer;">刷新重试</button>
+                    </div>`;
+            } finally {
+                elements.loader.style.display = 'none';
+                elements.content.style.opacity = '1';
+            }
+        }
+
+        function navigate(step) {
+            const target = parseInt(elements.select.value) + step;
+            if (target >= 1 && target <= CONFIG.totalPage) loadPage(target);
+        }
+
+        // --- 事件监听 ---
+
+        // 下拉菜单切换
+        elements.select.onchange = (e) => loadPage(e.target.value);
+
+        // 按钮点击
+        elements.prevBtn.onclick = () => navigate(-1);
+        elements.nextBtn.onclick = () => navigate(1);
+
+        // 键盘左右方向键翻页
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowLeft") navigate(-1);
+            if (e.key === "ArrowRight") navigate(1);
+        });
+
+        // 响应浏览器前进/后退按钮
+        window.onhashchange = () => {
+            const hash = parseInt(window.location.hash.replace('#', ''));
+            if (hash && hash !== parseInt(elements.select.value)) loadPage(hash);
+        };
+
+        // 启动应用
+        init();
+    </script>
+</body>
+</html>
