@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>老子道德经：四种原文表（网页版）</title>
     <style>
         :root {
@@ -22,9 +22,9 @@
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
+            -webkit-touch-callout: default;
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         #top-bar {
@@ -92,14 +92,12 @@
             border-bottom: 1px solid rgba(255, 238, 186, 0.5);
             z-index: 999;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            
             animation: autoFadeOut 5s linear forwards;
-            pointer-events: auto; 
         }
 
         @keyframes autoFadeOut {
             0% { opacity: 1; }
-            90% { opacity: 0.1; pointer-events: auto; }
+            90% { opacity: 0.1; }
             100% { opacity: 0; visibility: hidden; pointer-events: none; }
         }
 
@@ -117,10 +115,7 @@
             padding: 0 5px;
             line-height: 1;
             opacity: 0.5;
-            transition: opacity 0.2s;
         }
-        
-        .close-banner-btn:hover { opacity: 1; }
 
         #app {
             flex: 1;
@@ -156,7 +151,6 @@
             background: rgba(255,255,255,0.9);
             padding: 20px;
             border-radius: 12px;
-            pointer-events: none;
         }
 
         .spinner {
@@ -227,13 +221,7 @@
         function adjustPosition() {
             const rect = elements.content.getBoundingClientRect();
             const viewWidth = elements.app.clientWidth;
-            
-            if (rect.width < viewWidth) {
-                const offset = (viewWidth - rect.width) / 2;
-                elements.content.style.marginLeft = offset + "px";
-            } else {
-                elements.content.style.marginLeft = "0px";
-            }
+            elements.content.style.marginLeft = (rect.width < viewWidth) ? (viewWidth - rect.width) / 2 + "px" : "0px";
         }
 
         function updateZoom(newScale) {
@@ -254,42 +242,29 @@
             
             const hash = parseInt(window.location.hash.replace('#', ''));
             loadPage((hash > 0 && hash <= CONFIG.totalPage) ? hash : 1);
-            
         }
 
         async function loadPage(num) {
             const pageNum = parseInt(num);
             elements.loader.style.display = 'flex';
-            
             try {
                 const url = `${CONFIG.basePath}${encodeURIComponent(CONFIG.prefix + pageNum + '.svg')}`;
                 const resp = await fetch(url);
                 const svgData = await resp.text();
-
                 elements.content.innerHTML = svgData;
                 const svg = elements.content.querySelector('svg');
                 if (svg) {
                     svg.setAttribute('width', '900'); 
                     svg.removeAttribute('height');
                 }
-
                 elements.select.value = pageNum;
                 elements.prevBtn.disabled = (pageNum <= 1);
                 elements.nextBtn.disabled = (pageNum >= CONFIG.totalPage);
-                
                 window.history.replaceState(null, null, `#${pageNum}`);
-                
                 updateZoom(scale);
-
                 elements.app.scrollTop = 0; 
-                
                 const rect = elements.content.getBoundingClientRect();
-                if (rect.width > elements.app.clientWidth) {
-                    elements.app.scrollLeft = (rect.width - elements.app.clientWidth) / 2;
-                } else {
-                    elements.app.scrollLeft = 0;
-                }
-
+                elements.app.scrollLeft = (rect.width > elements.app.clientWidth) ? (rect.width - elements.app.clientWidth) / 2 : 0;
             } catch (err) {
                 elements.content.innerHTML = '<p style="text-align:center; padding-top:50px;">加载失败</p>';
             } finally {
@@ -297,23 +272,16 @@
             }
         }
 
-        document.addEventListener('gesturestart', (e) => e.preventDefault(), false);
-        document.addEventListener('gesturechange', (e) => e.preventDefault(), false);
-
         document.getElementById('zoom-in').onclick = () => updateZoom(scale + 0.2);
         document.getElementById('zoom-out').onclick = () => updateZoom(scale - 0.2);
-        
         elements.select.onchange = (e) => loadPage(e.target.value);
         elements.prevBtn.onclick = () => loadPage(parseInt(elements.select.value) - 1);
         elements.nextBtn.onclick = () => loadPage(parseInt(elements.select.value) + 1);
-
         window.onhashchange = () => {
             const hash = parseInt(window.location.hash.replace('#', ''));
             if (hash && hash !== parseInt(elements.select.value)) loadPage(hash);
         };
-
         window.onresize = adjustPosition;
-
         init();
     </script>
 </body>
