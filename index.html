@@ -205,8 +205,6 @@
         let translateY = 0;
         let isDragging = false;
         let startX, startY;
-        let velocityX = 0, velocityY = 0;
-        let momentumAnimationId = null;
 
         const elements = {
             select: document.getElementById('chapter-select'),
@@ -241,57 +239,12 @@
             applyTransform();
         }
 
-        function easeOutCubic(t) {
-            return 1 - Math.pow(1 - t, 3);
-        }
-
-        function applyMomentum() {
-            if (momentumAnimationId) cancelAnimationFrame(momentumAnimationId);
-            
-            if (Math.abs(velocityX) < 0.5 && Math.abs(velocityY) < 0.5) {
-                return;
-            }
-            
-            const startVelocityX = velocityX;
-            const startVelocityY = velocityY;
-            const duration = 500;
-            const startTime = Date.now();
-            
-            const animate = () => {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                const easeProgress = easeOutCubic(progress);
-                velocityX = startVelocityX * (1 - easeProgress);
-                velocityY = startVelocityY * (1 - easeProgress);
-                
-                translateX += velocityX;
-                translateY += velocityY;
-                
-                applyTransform();
-                
-                if (progress < 1) {
-                    momentumAnimationId = requestAnimationFrame(animate);
-                } else {
-                    velocityX = 0;
-                    velocityY = 0;
-                }
-            };
-            
-            momentumAnimationId = requestAnimationFrame(animate);
-        }
-
         elements.app.addEventListener('pointerdown', (e) => {
             if (!e.isPrimary) return;
             
-            if (momentumAnimationId) {
-                cancelAnimationFrame(momentumAnimationId);
-                momentumAnimationId = null;
-            }
-            
             isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
             
             elements.app.setPointerCapture(e.pointerId);
         });
@@ -299,17 +252,8 @@
         elements.app.addEventListener('pointermove', (e) => {
             if (!isDragging || !e.isPrimary) return;
             
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
-            
-            translateX += deltaX;
-            translateY += deltaY;
-            
-            velocityX = deltaX;
-            velocityY = deltaY;
-            
-            startX = e.clientX;
-            startY = e.clientY;
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
             
             applyTransform();
         });
@@ -317,7 +261,6 @@
         elements.app.addEventListener('pointerup', (e) => {
             if (e.isPrimary) {
                 isDragging = false;
-                applyMomentum();
             }
         });
 
