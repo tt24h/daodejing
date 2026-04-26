@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>老子道德经：四种原文表（网页版）</title>
     <style>
+
+
         :root {
             --primary-bg: #fdfaf2; 
             --btn-bg: #e8e2d2; 
@@ -13,6 +15,10 @@
             --radius: 8px;
         }
 
+
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             background: var(--primary-bg);
             margin: 0; padding: 0;
@@ -223,23 +229,13 @@
         elements.prevBtn.onclick = () => loadPage(elements.currentPage - 1);
         elements.nextBtn.onclick = () => loadPage(elements.currentPage + 1);
         
-        document.getElementById('back-to-top').onclick = function() {
-            try {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            } catch (e) {
-
+        document.getElementById('back-to-top').onclick = function(e) {
+            e.preventDefault();
+            window.scrollTo(0, 0); 
+            
+            if (document.documentElement.scrollTop > 0) {
                 document.documentElement.scrollTop = 0;
-                document.body.scrollTop = 0;
             }
-
-            setTimeout(() => {
-                if (window.scrollY > 0) {
-                    window.scrollTo(0, 0);
-                }
-            }, 100);
         };
 
         window.onhashchange = () => {
