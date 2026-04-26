@@ -129,7 +129,6 @@
             width: 100%;
             max-width: 1200px;
             transform-origin: 0 0;
-            transition: transform 0.1s ease-out;
             will-change: transform;
         }
 
@@ -207,6 +206,9 @@
         let translateY = 0;
         let isDragging = false;
         let startX, startY;
+        let lastX, lastY, lastTime;
+        let velocityX = 0, velocityY = 0;
+        let momentumAnimationId = null;
 
         const elements = {
             select: document.getElementById('chapter-select'),
@@ -240,27 +242,76 @@
             translateY = 20;
             applyTransform();
         }
-        
-        elements.app.addEventListener('pointerdown', (e) => {
 
+        function applyMomentum() {
+            if (momentumAnimationId) cancelAnimationFrame(momentumAnimationId);
+            
+            const friction = 0.95;
+            const minVelocity = 0.1;
+            
+            const animate = () => {
+                if (Math.abs(velocityX) < minVelocity && Math.abs(velocityY) < minVelocity) {
+                    velocityX = 0;
+                    velocityY = 0;
+                    return;
+                }
+                
+                translateX += velocityX;
+                translateY += velocityY;
+                velocityX *= friction;
+                velocityY *= friction;
+                
+                applyTransform();
+                momentumAnimationId = requestAnimationFrame(animate);
+            };
+            
+            momentumAnimationId = requestAnimationFrame(animate);
+        }
+
+        elements.app.addEventListener('pointerdown', (e) => {
             if (!e.isPrimary) return;
+            
+            if (momentumAnimationId) {
+                cancelAnimationFrame(momentumAnimationId);
+                momentumAnimationId = null;
+            }
             
             isDragging = true;
             startX = e.clientX - translateX;
             startY = e.clientY - translateY;
+            lastX = e.clientX;
+            lastY = e.clientY;
+            lastTime = Date.now();
+            velocityX = 0;
+            velocityY = 0;
+            
             elements.app.setPointerCapture(e.pointerId);
         });
 
         elements.app.addEventListener('pointermove', (e) => {
             if (!isDragging || !e.isPrimary) return;
+            
+            const currentTime = Date.now();
+            const deltaTime = currentTime - lastTime;
+            
+            if (deltaTime > 0) {
+                velocityX = (e.clientX - lastX) / deltaTime * 10;
+                velocityY = (e.clientY - lastY) / deltaTime * 10;
+            }
+            
             translateX = e.clientX - startX;
             translateY = e.clientY - startY;
+            lastX = e.clientX;
+            lastY = e.clientY;
+            lastTime = currentTime;
+            
             applyTransform();
         });
 
         elements.app.addEventListener('pointerup', (e) => {
             if (e.isPrimary) {
                 isDragging = false;
+                applyMomentum();
             }
         });
 
