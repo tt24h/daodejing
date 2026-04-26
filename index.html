@@ -137,11 +137,7 @@
         <tr>
             <td></td>
             <td class="footer-cell">
-                <button class="action-btn" 
-        id="back-to-top" 
-        onclick="window.scrollTo({ top: 0, left: window.scrollX, behavior: 'smooth' });">
-    回到顶部
-</button>
+<button class="action-btn" id="back-to-top" onclick="smoothScrollToTop()">回到顶部</button>
                 
                 <div style="font-size: 13px; color: #b5ada1; margin-top: 40px;">
                     网页版内容是图片格式 → 
@@ -232,6 +228,21 @@
 
         elements.prevBtn.onclick = () => loadPage(elements.currentPage - 1);
         elements.nextBtn.onclick = () => loadPage(elements.currentPage + 1);
+
+        function smoothScrollToTop() {
+    const currentX = window.pageXOffset || document.documentElement.scrollLeft;
+    
+    try {
+        window.scrollTo({
+            top: 0,
+            left: currentX,
+            behavior: 'smooth'
+        });
+    } catch (e) {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }
+}
 
         window.onhashchange = () => {
             const hashPage = parseInt(window.location.hash.replace('#p', ''));
