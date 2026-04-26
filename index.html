@@ -209,7 +209,7 @@
                 
                 elements.prevBtn.disabled = pageNum <= 1;
                 elements.nextBtn.disabled = pageNum >= CONFIG.totalPage;
-                window.history.replaceState(null, null, `#${pageNum}`);
+                window.history.replaceState(null, null, `#p${pageNum}`);
 
             } catch (e) {
                 elements.content.innerHTML = `<div class="error-msg">载入失败</div>`;
