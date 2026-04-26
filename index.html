@@ -57,6 +57,7 @@
             background: var(--btn-bg); color: var(--text-main);
             border: none; width: 44px; height: 36px;
             border-radius: var(--radius); font-size: 18px; cursor: pointer;
+            transition: opacity 0.2s;
         }
         .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
@@ -133,8 +134,8 @@
             <td class="footer-cell">
                 <button class="action-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">回到顶部</button>
                 <div style="font-size: 13px; color: #b5ada1; margin-top: 40px;">
-                    页面内容为图片格式 → 
-                    <a href="#" target="_blank" style="color: #665c51; text-decoration: none; border-bottom: 1px solid #dcd6c8;">
+                    网页版内容是图片格式 → 
+                    <a href="#" target="_blank" style="color: #b5ada1;; text-decoration: none; border-bottom: 1px solid #dcd6c8;">
                         PDF 版下载页面
                     </a>
                 </div>
@@ -176,7 +177,7 @@
                 }
             };
             document.onclick = () => elements.dropdown.classList.remove('show');
-            loadPage(parseInt(window.location.hash.replace('#', '')) || 1);
+            loadPage(parseInt(window.location.hash.replace('#p', '')) || 1);
         }
 
         async function loadPage(num) {
@@ -184,6 +185,8 @@
             elements.currentPage = pageNum;
             
             elements.trigger.classList.add('loading');
+            elements.prevBtn.disabled = true;
+            elements.nextBtn.disabled = true;
 
             try {
                 const url = `${CONFIG.basePath}${encodeURIComponent(CONFIG.prefix + pageNum + '.svg')}`;
@@ -191,7 +194,6 @@
                 if (!resp.ok) throw new Error();
                 
                 const svgText = await resp.text();
-                
                 elements.content.innerHTML = svgText;
                 
                 const svg = elements.content.querySelector('svg');
@@ -207,20 +209,23 @@
                     if (isActive) elements.label.innerText = item.innerText;
                 });
                 
-                elements.prevBtn.disabled = pageNum <= 1;
-                elements.nextBtn.disabled = pageNum >= CONFIG.totalPage;
                 window.history.replaceState(null, null, `#p${pageNum}`);
 
             } catch (e) {
                 elements.content.innerHTML = `<div class="error-msg">载入失败</div>`;
             } finally {
                 elements.trigger.classList.remove('loading');
+                elements.prevBtn.disabled = pageNum <= 1;
+                elements.nextBtn.disabled = pageNum >= CONFIG.totalPage;
             }
         }
 
         elements.prevBtn.onclick = () => loadPage(elements.currentPage - 1);
         elements.nextBtn.onclick = () => loadPage(elements.currentPage + 1);
-        window.onhashchange = () => loadPage(parseInt(window.location.hash.replace('#', '')));
+        window.onhashchange = () => {
+            const hashPage = parseInt(window.location.hash.replace('#p', ''));
+            if(hashPage && hashPage !== elements.currentPage) loadPage(hashPage);
+        };
         init();
     </script>
 </body>
