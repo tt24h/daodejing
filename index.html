@@ -105,8 +105,6 @@
     </style>
 </head>
 <body>
-
-    <div id="top-anchor"></div>
     <table id="main-layout">
         <colgroup>
             <col class="side-spacer"> <col class="main-column"> <col class="side-spacer"> </colgroup>
@@ -139,7 +137,12 @@
         <tr>
             <td></td>
             <td class="footer-cell">
-                <a href="#top-anchor" class="action-btn" id="back-to-top" style="text-decoration: none; display: inline-block;">回到顶部</a>
+                <button class="action-btn" 
+        id="back-to-top" 
+        onclick="window.scrollTo({ top: 0, left: window.scrollX, behavior: 'smooth' });">
+    回到顶部
+</button>
+                
                 <div style="font-size: 13px; color: #b5ada1; margin-top: 40px;">
                     网页版内容是图片格式 → 
                     <a href="#" target="_blank" style="color: #b5ada1;; text-decoration: none; border-bottom: 1px solid #dcd6c8;">
