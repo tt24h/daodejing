@@ -47,6 +47,7 @@ body {
     background: transparent; color: #b5ada1; border: 1px solid #e8e2d2;
     padding: 8px 20px; font-size: 13px; border-radius: var(--radius); cursor: pointer;
     transition: all 0.3s;
+    scroll-margin-top: 9999px;
 }
 .action-btn:hover { border-color: #dcd6c8; color: #665c51; }
 .nav-btn {
@@ -63,6 +64,7 @@ body {
     display: flex; align-items: center; justify-content: center; cursor: pointer;
     transition: opacity 0.2s;
 }
+
 @keyframes breathe {
     0% { opacity: 1; }
     50% { opacity: 0.4; }
@@ -88,8 +90,6 @@ body {
 </style>
 </head>
 <body>
-
-    <div id="header-top" style="height:0; width:0;"></div>
 <table id="main-layout">
 <colgroup>
     <col class="side-spacer"> <col class="main-column"> <col class="side-spacer"> 
@@ -211,13 +211,11 @@ elements.nextBtn.onclick = () => loadPage(elements.currentPage + 1);
 
 document.getElementById('back-to-top').onclick = function(e) {
     e.preventDefault();
-    const target = document.getElementById('header-top');
-
-    target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-};
+        this.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start', 
+        });
+    };
 window.onhashchange = () => {
     const hashPage = parseInt(window.location.hash.replace('#p', ''));
     if(hashPage && hashPage !== elements.currentPage) loadPage(hashPage);
