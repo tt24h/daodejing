@@ -6,282 +6,219 @@
     <title>老子道德经：四种原文表（网页版）</title>
     <style>
         :root {
-            --primary-bg: #fdfaf2;
-            --bar-bg: #4a4238;
-            --accent-color: #e0d8c3;
-            --btn-hover: #7c7164;
-            --text-main: #333;
+            --primary-bg: #fdfaf2; 
+            --btn-bg: #e8e2d2; 
+            --btn-hover: #e0d8c3;
+            --text-main: #665c51; 
+            --radius: 8px;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Serif CJK SC", serif;
             background: var(--primary-bg);
-            margin: 0;
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
+            margin: 0; padding: 0;
+            display: block; 
+        }
+
+        #main-layout {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; 
+            margin-top: 40px;
+        }
+
+        .side-spacer { width: auto; min-width: 20px; }
+        .main-column { width: 900px; }
+
+        .controls-cell { padding-bottom: 20px; text-align: center; }
+        .controls { display: inline-flex; justify-content: center; align-items: center; gap: 12px; }
+
+        .content-cell {
+            background: #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border-radius: 4px;
             overflow: hidden;
-            -webkit-touch-callout: default;
-            -webkit-user-select: text;
-            user-select: text;
+            min-height: 600px; 
         }
 
-        #top-bar {
-            background: var(--bar-bg);
-            color: var(--accent-color);
-            padding: 0 12px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            z-index: 1000;
-            flex-shrink: 0;
-        }
-
-        .nav-group, .zoom-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .top-nav-btn {
-            background: #665c51;
-            color: var(--accent-color);
-            border: none;
-            width: 38px;
-            height: 34px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-            flex-shrink: 0;
-        }
-
-        .top-nav-btn:hover { background: var(--btn-hover); color: white; }
-        .top-nav-btn:disabled { opacity: 0.2; cursor: not-allowed; }
-
-        select {
-            background: var(--accent-color);
-            border: none;
-            height: 34px;
-            padding: 0 8px;
-            border-radius: 4px;
-            font-size: 15px; 
-            width: 6em;
-            outline: none;
-        }
-
-        .notice-banner {
-            position: absolute;
-            top: 50px; 
-            left: 0;
-            right: 0;
-            background: rgba(255, 243, 205, 0.98); 
-            color: #856404;
-            padding: 8px 15px;
-            font-size: 13px;
-            display: flex; 
-            justify-content: center;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 238, 186, 0.5);
-            z-index: 999;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            animation: autoFadeOut 5s linear forwards;
-        }
-
-        @keyframes autoFadeOut {
-            0% { opacity: 1; }
-            90% { opacity: 0.1; }
-            100% { opacity: 0; visibility: hidden; pointer-events: none; }
-        }
-
-        .notice-content {
-            flex: 1;
+        .footer-cell {
             text-align: center;
+            padding-top: 20px; 
+            padding-bottom: 20px;
         }
 
-        .close-banner-btn {
-            background: transparent;
-            border: none;
-            color: #856404;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 0 5px;
-            line-height: 1;
-            opacity: 0.5;
+        .action-btn {
+            background: transparent; color: #b5ada1; border: 1px solid #e8e2d2;
+            padding: 8px 20px; font-size: 13px; border-radius: var(--radius); cursor: pointer;
+            transition: all 0.3s;
         }
+        .action-btn:hover { border-color: #dcd6c8; color: #665c51; }
 
-        #app {
-            flex: 1;
-            overflow: auto;
-            -webkit-overflow-scrolling: touch;
-            background: #eee;
-            text-align: left; 
+        .nav-btn {
+            background: var(--btn-bg); color: var(--text-main);
+            border: none; width: 44px; height: 36px;
+            border-radius: var(--radius); font-size: 18px; cursor: pointer;
         }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        .svg-container {
-            display: inline-block;
-            transform-origin: top left;
-            padding: 40px;
-            box-sizing: border-box;
-            transition: margin-left 0.1s ease-out;
+        .menu-container { position: relative; user-select: none; display: inline-block; }
+        
+        .menu-wrapper {
+            height: 36px; min-width: 120px; padding: 0 20px;
+            background: var(--btn-bg); border-radius: var(--radius);
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: opacity 0.2s;
         }
-
-        .svg-container svg {
-            display: block;
+        
+        @keyframes breathe {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        
+        .menu-wrapper.loading {
+            animation: breathe 1s infinite ease-in-out;
             pointer-events: none;
-            width: 900px;
-            height: auto;
         }
 
-        .loader {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            z-index: 2000;
-            background: rgba(255,255,255,0.9);
-            padding: 20px;
-            border-radius: 12px;
+        .menu-label { font-size: 14px; color: var(--text-main); }
+        .custom-dropdown {
+            position: absolute; top: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%); background: #fff;
+            border: 1px solid var(--btn-bg); border-radius: var(--radius);
+            width: 160px; max-height: 400px; overflow-y: auto; display: none; z-index: 100;
         }
+        .custom-dropdown.show { display: block; }
+        .dropdown-item { padding: 10px 0; font-size: 14px; text-align: center; cursor: pointer; color: var(--text-main); }
+        .dropdown-item:hover { background: var(--primary-bg); }
+        .dropdown-item.active { background: var(--btn-bg); font-weight: bold; }
 
-        .spinner {
-            width: 30px; height: 30px;
-            border: 3px solid #e0d8c3;
-            border-top: 3px solid #4a4238;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
+        #content svg { display: block; width: 900px; height: auto; }
+        
+        .error-msg { padding: 100px 0; color: #b5ada1; text-align: center; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <header id="top-bar">
-        <div class="nav-group">
-            <button id="prev-btn" class="top-nav-btn" title="上一页">‹</button>
-            <select id="chapter-select"></select>
-            <button id="next-btn" class="top-nav-btn" title="下一页">›</button>
-        </div>
-        <div class="zoom-group">
-            <button id="zoom-out" class="top-nav-btn" title="缩小">－</button>
-            <button id="zoom-in" class="top-nav-btn" title="放大">＋</button>
-        </div>
-    </header>
+    <table id="main-layout">
+        <colgroup>
+            <col class="side-spacer"> <col class="main-column"> <col class="side-spacer"> </colgroup>
 
-    <div id="notice-banner" class="notice-banner">
-        <div class="notice-content">
-            ⚠️ 本版的内容为图片。<a href="https://tt24h.github.io" target="_blank" style="color:#0056b3; text-decoration:none; font-weight:bold;">PDF 版下载页</a>
-        </div>
-        <button id="close-notice" class="close-banner-btn" title="关闭提示">×</button>
-    </div>
+        <tr>
+            <td></td>
+            <td class="controls-cell">
+                <nav class="controls">
+                    <button id="prev-btn" class="nav-btn">‹</button>
+                    <div class="menu-container">
+                        <div class="menu-wrapper" id="menu-trigger">
+                            <span id="current-label" class="menu-label">加载中...</span>
+                        </div>
+                        <div class="custom-dropdown" id="dropdown-list"></div>
+                    </div>
+                    <button id="next-btn" class="nav-btn">›</button>
+                </nav>
+            </td>
+            <td></td>
+        </tr>
 
-    <main id="app">
-        <div id="loader" class="loader">
-            <div class="spinner"></div>
-            <div style="font-size: 14px; color: #666; margin-top:10px;">载入图片中...</div>
-        </div>
-        <div id="content" class="svg-container"></div>
-    </main>
+        <tr>
+            <td></td>
+            <td class="content-cell">
+                <article id="content"></article>
+            </td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td class="footer-cell">
+                <button class="action-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">回到顶部</button>
+                <div style="font-size: 13px; color: #b5ada1; margin-top: 40px;">
+                    本版内容为图片格式 → 
+                    <a href="#" target="_blank" style="color: #665c51; text-decoration: none; border-bottom: 1px solid #dcd6c8;">PDF 下载页面</a>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+    </table>
 
     <script>
         const CONFIG = {
             prefix: "老子道德经：四种原文表-",
             basePath: "工具/svg/",
             totalPage: 86,
-            menu: ["封面", "概述", "参考书目", "与参照出版物原文的差异", "凡例", "第 1 章"] 
+            menu: ["封面", "概述", "参考书目", "差异对照", "凡例", "第 1 章"]
         };
-
-        let scale = parseFloat(localStorage.getItem('user_scale')) || 1.0;
 
         const elements = {
-            select: document.getElementById('chapter-select'),
+            trigger: document.getElementById('menu-trigger'),
+            dropdown: document.getElementById('dropdown-list'),
+            label: document.getElementById('current-label'),
             content: document.getElementById('content'),
-            app: document.getElementById('app'),
             prevBtn: document.getElementById('prev-btn'),
             nextBtn: document.getElementById('next-btn'),
-            loader: document.getElementById('loader'),
-            noticeBanner: document.getElementById('notice-banner'),
-            closeNotice: document.getElementById('close-notice')
+            currentPage: 1
         };
-
-        elements.closeNotice.onclick = () => {
-            elements.noticeBanner.style.display = 'none';
-        };
-
-        function adjustPosition() {
-            const rect = elements.content.getBoundingClientRect();
-            const viewWidth = elements.app.clientWidth;
-            elements.content.style.marginLeft = (rect.width < viewWidth) ? (viewWidth - rect.width) / 2 + "px" : "0px";
-        }
-
-        function updateZoom(newScale) {
-            scale = Math.min(Math.max(newScale, 0.4), 4.0);
-            localStorage.setItem('user_scale', scale);
-            elements.content.style.transform = `scale(${scale})`;
-            adjustPosition();
-        }
 
         function init() {
-            let options = '';
-            const menuLen = CONFIG.menu.length;
+            let itemsHtml = '';
             for (let i = 1; i <= CONFIG.totalPage; i++) {
-                let title = (i <= menuLen) ? CONFIG.menu[i - 1] : `第 ${i - (menuLen - 1)} 章`;
-                options += `<option value="${i}">${title}</option>`;
+                let title = (i <= CONFIG.menu.length) ? CONFIG.menu[i - 1] : `第 ${i - (CONFIG.menu.length - 1)} 章`;
+                itemsHtml += `<div class="dropdown-item" data-value="${i}">${title}</div>`;
             }
-            elements.select.innerHTML = options;
-            
-            const hash = parseInt(window.location.hash.replace('#', ''));
-            loadPage((hash > 0 && hash <= CONFIG.totalPage) ? hash : 1);
+            elements.dropdown.innerHTML = itemsHtml;
+            elements.trigger.onclick = (e) => { e.stopPropagation(); elements.dropdown.classList.toggle('show'); };
+            elements.dropdown.onclick = (e) => {
+                if (e.target.classList.contains('dropdown-item')) {
+                    loadPage(parseInt(e.target.dataset.value));
+                    elements.dropdown.classList.remove('show');
+                }
+            };
+            document.onclick = () => elements.dropdown.classList.remove('show');
+            loadPage(parseInt(window.location.hash.replace('#', '')) || 1);
         }
 
         async function loadPage(num) {
-            const pageNum = parseInt(num);
-            elements.loader.style.display = 'flex';
+            const pageNum = Math.max(1, Math.min(num, CONFIG.totalPage));
+            elements.currentPage = pageNum;
+            
+            elements.trigger.classList.add('loading');
+
             try {
                 const url = `${CONFIG.basePath}${encodeURIComponent(CONFIG.prefix + pageNum + '.svg')}`;
                 const resp = await fetch(url);
-                const svgData = await resp.text();
-                elements.content.innerHTML = svgData;
+                if (!resp.ok) throw new Error();
+                
+                const svgText = await resp.text();
+                
+                elements.content.innerHTML = svgText;
+                
                 const svg = elements.content.querySelector('svg');
                 if (svg) {
-                    svg.setAttribute('width', '900'); 
+                    svg.setAttribute('width', '900');
                     svg.removeAttribute('height');
                 }
-                elements.select.value = pageNum;
-                elements.prevBtn.disabled = (pageNum <= 1);
-                elements.nextBtn.disabled = (pageNum >= CONFIG.totalPage);
+
+                const items = elements.dropdown.querySelectorAll('.dropdown-item');
+                items.forEach(item => {
+                    const isActive = parseInt(item.dataset.value) === pageNum;
+                    item.classList.toggle('active', isActive);
+                    if (isActive) elements.label.innerText = item.innerText;
+                });
+                
+                elements.prevBtn.disabled = pageNum <= 1;
+                elements.nextBtn.disabled = pageNum >= CONFIG.totalPage;
                 window.history.replaceState(null, null, `#${pageNum}`);
-                updateZoom(scale);
-                elements.app.scrollTop = 0; 
-                const rect = elements.content.getBoundingClientRect();
-                elements.app.scrollLeft = (rect.width > elements.app.clientWidth) ? (rect.width - elements.app.clientWidth) / 2 : 0;
-            } catch (err) {
-                elements.content.innerHTML = '<p style="text-align:center; padding-top:50px;">加载失败</p>';
+
+            } catch (e) {
+                elements.content.innerHTML = `<div class="error-msg">载入失败</div>`;
             } finally {
-                elements.loader.style.display = 'none';
+                elements.trigger.classList.remove('loading');
             }
         }
 
-        document.getElementById('zoom-in').onclick = () => updateZoom(scale + 0.2);
-        document.getElementById('zoom-out').onclick = () => updateZoom(scale - 0.2);
-        elements.select.onchange = (e) => loadPage(e.target.value);
-        elements.prevBtn.onclick = () => loadPage(parseInt(elements.select.value) - 1);
-        elements.nextBtn.onclick = () => loadPage(parseInt(elements.select.value) + 1);
-        window.onhashchange = () => {
-            const hash = parseInt(window.location.hash.replace('#', ''));
-            if (hash && hash !== parseInt(elements.select.value)) loadPage(hash);
-        };
-        window.onresize = adjustPosition;
+        elements.prevBtn.onclick = () => loadPage(elements.currentPage - 1);
+        elements.nextBtn.onclick = () => loadPage(elements.currentPage + 1);
+        window.onhashchange = () => loadPage(parseInt(window.location.hash.replace('#', '')));
         init();
     </script>
 </body>
