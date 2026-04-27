@@ -7,11 +7,11 @@
 <style>
 
 :root {
-    --primary-bg: #fdfaf2;
-    --btn-border: #e8e2d2;
-    --text-light: #b5ada1;
-    --text-main: #736e69;
-    --radius: 8px;
+    --primary-bg: #f5f5f5; 
+    --btn-border: #dcdcdc;
+    --text-light: #888888;
+    --text-main: #4a4a4a;
+    --radius: 10px;
 }
 
 html {
@@ -42,7 +42,7 @@ body {
 
 .content-cell {
     background: #fff;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     border-radius: 4px;
     overflow: hidden;
     min-height: 600px;
@@ -51,19 +51,29 @@ body {
 .controls-cell {
     padding-bottom: 20px;
     text-align: center;
+
+    user-select: none; 
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .footer-cell {
     text-align: center;
     padding: 20px 0;
+    
+    user-select: none; 
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .nav-btn,
 .menu-wrapper,
-.action-btn {
+#back-to-top-btn {
     background: transparent;
     color: var(--text-main);
-    border: 1px solid var(--btn-border);
+    border: 1.5px solid var(--btn-border); 
     border-radius: var(--radius);
     cursor: pointer;
     transition: all 0.3s;
@@ -72,47 +82,52 @@ body {
     justify-content: center;
     box-sizing: border-box;
     vertical-align: middle;
-}
-#back-to-top {
-    color: var(--text-light);
+
+    user-select: none; 
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .nav-btn {
-    width: 44px;
-    height: 36px;
-    font-size: 18px;
-    border: 1px solid var(--btn-border);
+    width: 56px; 
+    height: 48px;
+    font-size: 24px; 
 }
+
+#back-to-top-btn {
+    color: var(--text-light);
+    padding: 12px 30px;
+    font-size: 15px;
+    scroll-margin-top: 9999px;
+}
+
 
 .nav-btn:disabled {
     opacity: 0.3;
-    cursor: not-allowed;
+    cursor: default;
 }
 
 .menu-wrapper {
-    height: 36px;
-    min-width: 120px;
-    padding: 0 20px;
+    height: 48px;
+    min-width: 160px; 
+    padding: 0 25px;
 }
 
-.menu-label {
-    font-size: 14px;
-    color: inherit;
-}
-
-.action-btn {
-    padding: 8px 20px;
-    font-size: 13px;
-    scroll-margin-top: 9999px;
+#menu-display {
+    font-size: 16px; 
+    font-weight: 500;
 }
 
 .menu-container {
     position: relative;
     user-select: none;
     display: inline-block;
+    margin: 0 20px;
+    vertical-align: middle;
 }
 
-.custom-dropdown {
+#menu-dropdown {
     position: absolute;
     top: calc(100% + 8px);
     left: 50%;
@@ -120,14 +135,14 @@ body {
     background: #fff;
     border: 1px solid var(--btn-border);
     border-radius: var(--radius);
-    width: 160px;
+    width: 200px;
     max-height: 400px;
     overflow-y: auto;
     display: none;
     z-index: 100;
 }
 
-.custom-dropdown.show {
+#menu-dropdown.show {
     display: block;
 }
 
@@ -139,13 +154,13 @@ body {
     color: var(--text-main);
 }
 
-.dropdown-item:hover {
-    background: var(--primary-bg);
-}
-
 .dropdown-item.active {
     color: var(--text-main);
     font-weight: bold;
+}
+
+.dropdown-item:hover {
+    background: var(--primary-bg);
 }
 
 #content svg {
@@ -164,7 +179,7 @@ body {
 .download-link {
     color: var(--text-light);
     text-decoration: none;
-    border-bottom: 1px dashed #dcd6c8;
+    border-bottom: 1px dashed var(--text-light);
     padding-bottom: 2px;
     transition: all 0.3s;
 }
@@ -202,9 +217,9 @@ body {
             <button id="prev-btn" class="nav-btn">‹</button>
             <div class="menu-container">
                 <div class="menu-wrapper" id="menu-trigger">
-                    <span id="current-label" class="menu-label">加载图片中...</span>
+                    <span id="menu-display">加载图片中...</span>
                 </div>
-                <div class="custom-dropdown" id="dropdown-list"></div>
+                <div id="menu-dropdown"></div>
             </div>
             <button id="next-btn" class="nav-btn">›</button>
         </nav>
@@ -221,9 +236,9 @@ body {
 <tr>
     <td></td>
     <td class="footer-cell">
-        <button class="action-btn" id="back-to-top">回到顶部</button>
-        <div style="font-size: 13px; color: #b5ada1; margin-top: 40px;">
-            网页版的内容是图片格式，PDF 版是文字，可以在<a href="https://tt24h.github.io/" target="_blank" class="download-link">资料导航内</a>中下载。
+        <button id="back-to-top-btn">回到顶部</button>
+        <div style="font-size: 13px; color: var(--text-light); margin-top: 40px;">
+            网页版的内容是图片格式，PDF 版是文字，可以在<a href="https://tt24h.github.io/" target="_blank" class="download-link">资料导航页</a>下载。
         </div>
     </td>
     <td></td>
@@ -240,8 +255,8 @@ const CONFIG = {
 
 const elements = {
     trigger: document.getElementById('menu-trigger'),
-    dropdown: document.getElementById('dropdown-list'),
-    label: document.getElementById('current-label'),
+    dropdown: document.getElementById('menu-dropdown'),
+    label: document.getElementById('menu-display'),
     content: document.getElementById('content'),
     prevBtn: document.getElementById('prev-btn'),
     nextBtn: document.getElementById('next-btn'),
@@ -309,7 +324,7 @@ async function loadPage(num) {
 elements.prevBtn.onclick = () => loadPage(elements.currentPage - 1);
 elements.nextBtn.onclick = () => loadPage(elements.currentPage + 1);
 
-document.getElementById('back-to-top').onclick = function(e) {
+document.getElementById('back-to-top-btn').onclick = function(e) {
     e.preventDefault();
         this.scrollIntoView({
             behavior: 'smooth',
