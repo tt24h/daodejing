@@ -290,36 +290,24 @@ async function loadPage(num) {
     elements.prevBtn.disabled = true;
     elements.nextBtn.disabled = true;
 
-    try {
-        const url = `${CONFIG.basePath}${encodeURIComponent(CONFIG.prefix + pageNum + '.svg')}`;
-        const resp = await fetch(url);
-        if (!resp.ok) throw new Error();
-        
-        const svgText = await resp.text();
-        elements.content.innerHTML = svgText;
-        
-        const svg = elements.content.querySelector('svg');
-        if (svg) {
-            svg.setAttribute('width', '900');
-            svg.removeAttribute('height');
-        }
+    const url = `${CONFIG.basePath}${encodeURIComponent(CONFIG.prefix + pageNum + '.svg')}`;
 
-        const items = elements.dropdown.querySelectorAll('.dropdown-item');
-        items.forEach(item => {
-            const isActive = parseInt(item.dataset.value) === pageNum;
-            item.classList.toggle('active', isActive);
-            if (isActive) elements.label.innerText = item.innerText;
-        });
-        
-        window.history.replaceState(null, null, `#p${pageNum}`);
+    elements.content.innerHTML = `<img src="${url}" style="width:900px; display:block; margin:0 auto;" alt="第${pageNum}页">`;
 
-    } catch (e) {
-        elements.content.innerHTML = `<div class="error-msg">载入失败</div>`;
-    } finally {
+    const items = elements.dropdown.querySelectorAll('.dropdown-item');
+    items.forEach(item => {
+        const isActive = parseInt(item.dataset.value) === pageNum;
+        item.classList.toggle('active', isActive);
+        if (isActive) elements.label.innerText = item.innerText;
+    });
+    
+    window.history.replaceState(null, null, `#p${pageNum}`);
+    
+    setTimeout(() => {
         elements.trigger.classList.remove('loading');
         elements.prevBtn.disabled = pageNum <= 1;
         elements.nextBtn.disabled = pageNum >= CONFIG.totalPage;
-    }
+    }, 50);
 }
 
 elements.prevBtn.onclick = () => loadPage(elements.currentPage - 1);
