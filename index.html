@@ -282,7 +282,7 @@ function init() {
     loadPage(parseInt(window.location.hash.replace('#p', '')) || 1);
 }
 
-async function loadPage(num) {
+function loadPage(num) {
     const pageNum = Math.max(1, Math.min(num, CONFIG.totalPage));
     elements.currentPage = pageNum;
     
@@ -292,24 +292,39 @@ async function loadPage(num) {
 
     const url = `${CONFIG.basePath}${encodeURIComponent(CONFIG.prefix + pageNum + '.svg')}`;
 
-    elements.content.innerHTML = `<img src="${url}" style="width:900px; display:block; margin:0 auto;" alt="第${pageNum}页">`;
+    const img = new Image();
+    img.src = url;
+    img.style.width = "900px";
+    img.style.display = "block";
+    img.style.margin = "0 auto";
 
+    img.onload = () => {
+        elements.content.innerHTML = ''; 
+        elements.content.appendChild(img); 
+        
+        elements.trigger.classList.remove('loading');
+        updateUI(pageNum);
+    };
+
+    img.onerror = () => {
+        elements.content.innerHTML = `<div class="error-msg">载入失败</div>`;
+        elements.trigger.classList.remove('loading');
+        updateUI(pageNum);
+    };
+}
+
+function updateUI(pageNum) {
     const items = elements.dropdown.querySelectorAll('.dropdown-item');
     items.forEach(item => {
         const isActive = parseInt(item.dataset.value) === pageNum;
         item.classList.toggle('active', isActive);
         if (isActive) elements.label.innerText = item.innerText;
     });
-    
-    window.history.replaceState(null, null, `#p${pageNum}`);
-    
-    setTimeout(() => {
-        elements.trigger.classList.remove('loading');
-        elements.prevBtn.disabled = pageNum <= 1;
-        elements.nextBtn.disabled = pageNum >= CONFIG.totalPage;
-    }, 50);
-}
 
+    window.history.replaceState(null, null, `#p${pageNum}`);
+    elements.prevBtn.disabled = pageNum <= 1;
+    elements.nextBtn.disabled = pageNum >= CONFIG.totalPage;
+}
 elements.prevBtn.onclick = () => loadPage(elements.currentPage - 1);
 elements.nextBtn.onclick = () => loadPage(elements.currentPage + 1);
 
